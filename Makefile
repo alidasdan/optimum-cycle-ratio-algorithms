@@ -25,6 +25,8 @@ BURNS_BASE = burns
 BURNS_PREFIXES = burn bur bu b
 HOWARD_BASE = howard 
 HOWARD_PREFIXES = howar howa how ho h
+KARP_BASE = karp
+KARP_PREFIXES = kar ka
 KO_BASE = ko 
 KO_PREFIXES = k
 LAWLER_BASE = lawler
@@ -40,6 +42,7 @@ YTO_PREFIXES = yt y
 
 BURNS = ad_alg_burns
 HOWARD = ad_alg_howard
+KARP = ad_alg_karp
 KO = ad_alg_ko
 LAWLER = ad_alg_lawler
 SZY = ad_alg_szymanski
@@ -47,7 +50,7 @@ TARJAN = ad_alg_tarjan
 VALITER = ad_alg_valiter
 YTO = ad_alg_yto
 
-# Excluded Burns' algorithm due to its slowness
+# Excluded Burns' algorithm & Karp's algorithm due to its slowness
 EXES = $(HOWARD_BASE) \
   $(KO_BASE) \
   $(LAWLER_BASE) \
@@ -75,6 +78,15 @@ $(HOWARD_BASE): $(OBJS1) $(HOWARD).o
 
 $(HOWARD).o: ad_queue.h ad_graph.h $(HOWARD).cc
 	$(CC) $(C_FLAGS) $(D_FLAGS) -c $(HOWARD).cc
+
+# Karp's algorithm:
+$(KARP_PREFIXES) : $(KARP_BASE)
+
+$(KARP_BASE): $(OBJS1) $(KARP).o
+	$(LD) -o $@.x $(LD_FLAGS) $(OBJS1) $(KARP).o
+
+$(KARP).o: ad_pq.h ad_graph.h $(KARP).cc
+	$(CC) $(C_FLAGS) $(D_FLAGS) -c $(KARP).cc
 
 # Karp-Orlin algorithm:
 $(KO_PREFIXES) : $(KO_BASE)
