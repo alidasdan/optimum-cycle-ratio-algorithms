@@ -103,7 +103,7 @@ measurement purposes.
 
 For more information on the input flags, see the code and Makefile.
 
-### HOW TO TEST
+## HOW TO TEST
 
 Type 'make test' to test each executable on the sample.d file. The
 result will be a 'pass' or a 'fail'.
@@ -112,7 +112,7 @@ To see the results of all executables on all .d files, see the files
 'all-min-runs.txt' and 'all-max-runs.txt' under
 'github/alidasdan/graph-benchmarks'.
 
-### INPUT FILE FORMAT
+## INPUT FILE FORMAT
 
 The input file format is the DIMACS format. See the file sample.d for
 a sample input file, which is also explained below.
@@ -152,7 +152,7 @@ under 'github/alidasdan/graph-benchmarks/scripts' to change the arc
 weights, e.g., regenerate using different random number generator
 seeds or using different distributions. 
 
-### REFERENCE
+## REFERENCE
 
 Please cite this reference if you use my programs in your research
 work.
@@ -173,7 +173,7 @@ work.
  }
 ```
 
-### COPYRIGHT
+## COPYRIGHT
 
 COPYRIGHT C 1999 - Ali Dasdan
 
@@ -186,4 +186,4 @@ conditions of any kind, either express or implied including, without
 limitation, any warranties or conditions of title, non-infringement,
 merchantability or fitness for a particular purpose.
 
-### END OF FILE
+## END OF FILE
