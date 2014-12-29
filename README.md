@@ -1,9 +1,38 @@
 optimum-cycle-ratio-algorithms
 ==============================
 
-This directory contains the software that implements many optimum
+This package contains the software that implements many optimum
 cycle ratio algorithms as detailed in [Da04]. I will refer to the
 software as CYCLE_RATIO for ease of reference.
+
+## OPTIMUM CYCLE RATIO PROBLEM
+
+Consider a cyclic graph where every edge has two numbers associated
+with it, called its weight and its transit time (which is so named due
+to the applications of this problem in transportation network
+optimization). The weight of a cycle is equal to the total weight of
+the edges along the cycle. The transit time of a cycle is equal to the
+total transit time of the edges along the cycle. The ratio of a cycle
+is the total weight divided by the total transit time. The ratio is
+almost like the average weight of the cycle.
+
+If the transit time of each edge is 1, then the cycle ratio turns into
+cycle mean, or the optimum cycle ratio problem is called the optimum
+cycle mean problem. In other words, cycle ratios generalize cycle
+means.
+
+Finding the shortest (in weight) cycle is tractable but finding the
+longest (in weight) cycle is NP-hard. It is interesting that finding
+the cycle whose ratio is optimum, i.e., maximum or mimimum, is
+tractable. The algorithms in this package solve this problem.
+
+This problem is fundamental to analysing the performance of discrete
+event systems. This is another way of saying if you need to find the
+optimum performance of a system, say, the optimum speed an electronic
+circuit can run at or the optimum capacity a railway network can
+carry, you will need the algorithms implemented in this package.
+
+## MORE INTRODUCTION
 
 I originally developed CYCLE_RATIO during my PhD study (which was
 PhinisheD in 1999) but re-implemented a couple of times to get the
