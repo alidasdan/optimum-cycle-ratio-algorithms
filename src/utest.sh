@@ -6,8 +6,8 @@
 
 for i in *.x; 
 do 
-   ./$i sample.d -v 1 | grep lambda | awk -v p=$i -v v=1 -v t=2.90 -v e=0.01 -f utest.awk 
-   ./$i sample.d -v 0 | grep lambda | awk -v p=$i -v v=0 -v t=3.85 -v e=0.01 -f utest.awk 
+   ./$i ../input/sample.d -v 1 | grep lambda | awk -v p=$i -v v=1 -v t=2.90 -v e=0.01 -f utest.awk 
+   ./$i ../input/sample.d -v 0 | grep lambda | awk -v p=$i -v v=0 -v t=3.85 -v e=0.01 -f utest.awk 
 done
 
 # EOF
