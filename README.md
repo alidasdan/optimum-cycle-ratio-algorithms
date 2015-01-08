@@ -50,15 +50,15 @@ charge in academic research and teaching. For any commercial use,
 contact Ali Dasdan at ali_dasdan@yahoo.com. See the COPYRIGHT section
 below.
 
-## HOW TO COMPILE AND BUILD
+## HOW TO BUILD
 
-Type 'make' (or 'gmake') to build all executables. An executable named
-ALGO can be generated for any file named 'ad_alg_ALGO.cc'. The
-corresponding make target is ALGO. The executables are all have .x
-extension. You can also build the same target by using any prefix of
-the name. For example, you can build the executible 'yto.x' (of the
-Young-Tarjan-Orlin's algorithm) by typing 'make yto' or 'make yt' or
-'make y'.
+Under the 'src' directory, type 'make' (or 'gmake') to build all
+executables. An executable named ALGO can be generated for any file
+named 'ad_alg_ALGO.cc'. The corresponding make target is ALGO. The
+executables are all have .x extension. You can also build the same
+target by using any prefix of the name. For example, you can build the
+executible 'yto.x' (of the Young-Tarjan-Orlin's algorithm) by typing
+'make yto' or 'make yt' or 'make y'.
 
 With no targets following the make command, the following executables
 will be generated:
@@ -73,9 +73,9 @@ will be generated:
 
 ## HOW TO RUN
 
-Type the name of one of the executables in your command line to get
-the usage information. For example, typing 'yto.x' prints out the
-following information:
+Under the 'src' directory, type the name of one of the executables in
+your command line to get the usage information. For example, typing
+'yto.x' prints out the following information:
 
 ```
 > yto.x
@@ -134,12 +134,16 @@ For more information on the input flags, see the code and Makefile.
 
 ## HOW TO TEST
 
-Type 'make test' to test each executable on the sample.d file. The
-result will be a 'pass' or a 'fail'.
+Under the 'src' directory, type 'make test' to test each executable on
+the sample.d file. The result will be a 'pass' or a 'fail'.
 
 To see the results of all executables on all .d files, see the files
 'all-min-runs.txt' and 'all-max-runs.txt' under
 'github/alidasdan/graph-benchmarks'.
+
+## HOW TO CLEAN
+
+Under the 'src' directory, type 'make clean'.
 
 ## INPUT FILE FORMAT
 
@@ -184,7 +188,7 @@ seeds or using different distributions.
 ## REFERENCE
 
 Please cite this reference if you use my programs in your research
-work.
+work. A preprint is accessible from the 'doc' directory.
 
 ```
 @article{Da04,
