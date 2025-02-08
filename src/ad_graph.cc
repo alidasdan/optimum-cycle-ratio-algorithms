@@ -21,10 +21,37 @@ traverse_via_outedges( const ad_graph< ninfo >& g,
                        int v, bool *not_visited, 
                        int& n, int *node_list );
 
+// Traverse g in DFS order using outedges. Iterative DFS for scalability.
+void 
+traverse_via_outedges_iter( const ad_graph< ninfo >& g, 
+                            int v, bool *not_visited, 
+                            int& n, int *node_list );
+
+// Traverse g in DFS order using outedges. This recursive version runs
+// into stack size limitations for some large random graphs in the
+// graph-benchmarks repo so the non-recursive version above.
+void 
+traverse_via_outedges_recur( const ad_graph< ninfo >& g, 
+                             int v, bool *not_visited, 
+                             int& n, int *node_list );
+
 // Traverse g in DFS order using inedges.
 void 
 traverse_via_inedges( const ad_graph< ninfo >& g, 
                       int v, int num_comps, int *comp_num );
+
+
+// Traverse g in DFS order using inedges. Iterative DFS for scalability.
+void 
+traverse_via_inedges_iter( const ad_graph< ninfo >& g, 
+                           int v, int num_comps, int *comp_num );
+
+// Traverse g in DFS order using inedges. This recursive version runs
+// into stack size limitations for some large random graphs in the
+// graph-benchmarks repo so the non-recursive version above.
+void 
+traverse_via_inedges_recur( const ad_graph< ninfo >& g, 
+                            int v, int num_comps, int *comp_num );
 
 // Find the properties of SCCs before their dynamic creation.
 extern 
@@ -948,11 +975,78 @@ num_sccs( const ad_graph< ninfo >& g, int *comp_num )
 }
 
 // Traverse the graph g using the outgoing edges. This algorithm is a
-// depth-first search algorithm.
+// top-level algorithm calling an iterative or recursive depth-first
+// search algorithm.
 void
-traverse_via_outedges( const ad_graph< ninfo >& g, 
-                       int v, bool *not_visited, 
+traverse_via_outedges( const ad_graph< ninfo >& g,
+                       int start_v, bool *not_visited,
                        int& n, int *node_list )
+{
+#ifdef DFS_RECUR
+    traverse_via_outedges_recur(g, start_v, not_visited, n, node_list);
+#else
+    traverse_via_outedges_iter(g, start_v, not_visited, n, node_list);
+#endif
+}
+
+// Traverse the graph g using the outgoing edges. This algorithm is a
+// iterative depth-first search algorithm.
+void
+traverse_via_outedges_iter( const ad_graph< ninfo >& g,
+                            int start_v, bool *not_visited,
+                            int& n, int *node_list )
+{
+    // Structure to store node and edge index on stack
+    struct stack_entry {
+        int node;
+        int edge_index;
+    };
+    
+    // Allocate stack - maximum size needed is number of nodes
+    int stack_size = g.num_nodes();
+    stack_entry* stack = new stack_entry[ stack_size ];
+    int stack_top = 0;  // Index of top of stack
+    
+    // Push initial node
+    stack[ stack_top ].node = start_v;
+    stack[ stack_top ].edge_index = 0;
+    stack_top++;
+    not_visited[ start_v ] = false;
+    
+    while ( stack_top > 0 ) {
+        // Get reference to top stack entry
+        stack_entry& current = stack[ stack_top - 1 ];
+        
+        // If we've processed all out-edges of current node
+        if ( current.edge_index >= g.outdegree( current.node ) ) {
+            node_list[ --n ] = current.node;
+            stack_top--;  // Pop from stack
+            continue;
+        }
+        
+        // Get next unvisited target node
+        int t = g.ith_target_node( current.node, current.edge_index );
+        current.edge_index++;
+        
+        if ( not_visited[ t ] ) {
+            not_visited[ t ] = false;
+            // Push new node onto stack
+            stack[ stack_top ].node = t;
+            stack[ stack_top ].edge_index = 0;
+            stack_top++;
+        }
+    }
+    
+    // Free allocated memory
+    delete[] stack;
+} // traverse_via_outedges_iter
+
+// Traverse the graph g using the outgoing edges. This algorithm is a
+// recursive depth-first search algorithm.
+void
+traverse_via_outedges_recur( const ad_graph< ninfo >& g, 
+                             int v, bool *not_visited, 
+                             int& n, int *node_list )
 {
     not_visited[ v ] = false;
 
@@ -963,17 +1057,82 @@ traverse_via_outedges( const ad_graph< ninfo >& g,
 
         int t = g.ith_target_node( v, i );
         if ( not_visited[ t ] )
-            traverse_via_outedges( g, t, not_visited, n, node_list );
-    } 
+            traverse_via_outedges_recur( g, t, not_visited, n, node_list );
+    }
 
     node_list[ --n ] = v;
-}  // traverse_via_outedges
+}  // traverse_via_outedges_recur
 
 // Traverse the graph g using the incoming edges. This algorithm is a
-// depth-first search algorithm.
+// top-level algorithm calling an iterative or recursive depth-first
+// search algorithm.
 void
-traverse_via_inedges( const ad_graph< ninfo >& g, 
-                      int v, int num_comps, int *comp_num )
+traverse_via_inedges( const ad_graph< ninfo >& g,
+                      int start_v, int num_comps, int *comp_num)
+{
+#ifdef DFS_RECUR
+    traverse_via_inedges_recur(g, start_v, num_comps, comp_num);
+#else
+    traverse_via_inedges_iter(g, start_v, num_comps, comp_num);
+#endif
+   
+} // traverse_via_inedges
+
+// Traverse the graph g using the incoming edges. This algorithm is an
+// iterative depth-first search algorithm.
+void
+traverse_via_inedges_iter( const ad_graph< ninfo >& g,
+                           int start_v, int num_comps, int *comp_num)
+{
+    // Structure to store node and edge index on stack
+    struct stack_entry {
+        int node;
+        int edge_index;
+    };
+    
+    // Allocate stack - maximum size needed is number of nodes
+    int stack_size = g.num_nodes();
+    stack_entry* stack = new stack_entry[ stack_size ];
+    int stack_top = 0;  // Index of top of stack
+    
+    // Push initial node
+    stack[ stack_top ].node = start_v;
+    stack[ stack_top ].edge_index = 0;
+    stack_top++;
+    comp_num[ start_v ] = num_comps;
+    
+    while ( stack_top > 0 ) {
+        // Get reference to top stack entry
+        stack_entry& current = stack[ stack_top - 1 ];
+        
+        // If we've processed all in-edges of current node
+        if ( current.edge_index >= g.indegree( current.node ) ) {
+            stack_top--;  // Pop from stack
+            continue;
+        }
+        
+        // Get next source node
+        int s = g.ith_source_node( current.node, current.edge_index );
+        current.edge_index++;
+        
+        if ( comp_num[ s ] == -1 ) {
+            comp_num[ s ] = num_comps;
+            // Push new node onto stack
+            stack[ stack_top ].node = s;
+            stack[ stack_top ].edge_index = 0;
+            stack_top++;
+        }
+    }
+    
+    // Free allocated memory
+    delete[] stack;
+} // traverse_via_inedges_iter
+
+// Traverse the graph g using the incoming edges. This algorithm is a
+// recursive depth-first search algorithm.
+void
+traverse_via_inedges_recur( const ad_graph< ninfo >& g, 
+                            int v, int num_comps, int *comp_num )
 {
     comp_num[ v ] = num_comps;
 
@@ -984,9 +1143,9 @@ traverse_via_inedges( const ad_graph< ninfo >& g,
 
         int s = g.ith_source_node( v, i );
         if ( -1 == comp_num[ s ] )
-            traverse_via_inedges( g, s, num_comps, comp_num );
+            traverse_via_inedges_recur( g, s, num_comps, comp_num );
     }
-}  // traverse_via_inedges
+}  // traverse_via_inedges_recur
 
 void
 generate_part_for_all_components( ad_graph< cninfo >& cg,

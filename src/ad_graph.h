@@ -75,7 +75,7 @@ private:
     int     indeg;  // In-degree.
     int     outdeg; // Out-degree.
     int     inadj;  // Index of the first edge in adjlist array.
-    int     outadj; // Index of the first edge in adjlist array.
+    int     outadj; // Index of the first edge out adjlist array.
     ninfo_t inf;    // Info field.
 
     // Constructor helpers.
